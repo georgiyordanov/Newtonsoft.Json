@@ -272,7 +272,7 @@ namespace Newtonsoft.Json.Serialization
       
       if (memberSerialization != MemberSerialization.Fields)
       {
-#if !NET20
+#if !(NET20 || SQLCLR)
         DataContractAttribute dataContractAttribute = JsonTypeReflector.GetDataContractAttribute(objectType);
 #endif
 
@@ -295,7 +295,7 @@ namespace Newtonsoft.Json.Serialization
               // or are a field if serializing just fields
               if (JsonTypeReflector.GetAttribute<JsonPropertyAttribute>(member) != null)
                 serializableMembers.Add(member);
-#if !NET20
+#if !(NET20 || SQLCLR)
               else if (dataContractAttribute != null && JsonTypeReflector.GetAttribute<DataMemberAttribute>(member) != null)
                 serializableMembers.Add(member);
 #endif
@@ -582,7 +582,7 @@ namespace Newtonsoft.Json.Serialization
       {
         contract.IsReference = containerAttribute._isReference;
       }
-#if !NET20
+#if !(NET20 || SQLCLR)
       else
       {
         DataContractAttribute dataContractAttribute = JsonTypeReflector.GetDataContractAttribute(contract.NonNullableUnderlyingType);
@@ -1063,7 +1063,7 @@ namespace Newtonsoft.Json.Serialization
 
     private void SetPropertySettingsFromAttributes(JsonProperty property, object attributeProvider, string name, Type declaringType, MemberSerialization memberSerialization, out bool allowNonPublicAccess)
     {
-#if !NET20
+#if !(NET20 || SQLCLR)
       DataContractAttribute dataContractAttribute = JsonTypeReflector.GetDataContractAttribute(declaringType);
 
       MemberInfo memberInfo = attributeProvider as MemberInfo;
@@ -1082,7 +1082,7 @@ namespace Newtonsoft.Json.Serialization
       string mappedName;
       if (propertyAttribute != null && propertyAttribute.PropertyName != null)
         mappedName = propertyAttribute.PropertyName;
-#if !NET20
+#if !(NET20 || SQLCLR)
       else if (dataMemberAttribute != null && dataMemberAttribute.Name != null)
         mappedName = dataMemberAttribute.Name;
 #endif
@@ -1100,7 +1100,7 @@ namespace Newtonsoft.Json.Serialization
         property.DefaultValueHandling = propertyAttribute._defaultValueHandling;
         hasMemberAttribute = true;
       }
-#if !NET20
+#if !(NET20 || SQLCLR)
       else if (dataMemberAttribute != null)
       {
         property._required = (dataMemberAttribute.IsRequired) ? Required.AllowNull : Required.Default;
@@ -1123,7 +1123,7 @@ namespace Newtonsoft.Json.Serialization
       {
         bool hasIgnoreDataMemberAttribute = false;
 
-#if !(NET20 || NET35)
+#if !(NET20 || NET35 || SQLCLR)
         hasIgnoreDataMemberAttribute = (JsonTypeReflector.GetAttribute<IgnoreDataMemberAttribute>(attributeProvider) != null);
 #endif
 
@@ -1167,7 +1167,7 @@ namespace Newtonsoft.Json.Serialization
       if (memberSerialization == MemberSerialization.Fields)
         allowNonPublicAccess = true;
 
-#if !NET20
+#if !(NET20 || SQLCLR)
       if (dataMemberAttribute != null)
       {
         allowNonPublicAccess = true;
